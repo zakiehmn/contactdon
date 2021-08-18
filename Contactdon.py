@@ -1,6 +1,6 @@
 
 class Contactdon:
-    contactList
+    
 
     def add_contact(fName,lName,emailAddress,phoneNumber):
         newContact=Contact()
@@ -11,5 +11,18 @@ class Contactdon:
         newContact.set_ID
         contactList.append(newContact)
 
-        
+    def command():
+        mainCommand=input()
+        if mainCommand=="add":
+            while('_'):
+                letter=input()
+                if(letter=="f"):
+                    fname=input()
+                if(letter=="l"):
+                    lname=input()
+                if(letter=="e"):
+                    emailaddress=input()
+                if(letter=="p"):
+                    phonenumber=input()
+                    
 

@@ -1,10 +1,5 @@
 class Contact:
-    fName
-    lName
-    emailAddress
-    phoneNumber
-    ID=0
-
+    
     def __init__(self,fName,lName,emailAddress,phoneNumber,ID):
         self._fName=fName
         self._lName=lName
