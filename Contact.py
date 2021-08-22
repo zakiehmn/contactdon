@@ -1,11 +1,10 @@
 class Contact:
     
-    def __init__(self,fName,lName,emailAddress,phoneNumber,ID):
+    def __init__(self,fName,lName,emailAddress,phoneNumber):
         self._fName=fName
         self._lName=lName
         self._emailAddress=emailAddress
         self._phoneNumber=phoneNumber
-        set_ID(ID)
 
     def set_fName(self,fName):
         self._fName=fName
@@ -38,7 +37,6 @@ class Contact:
     def get_ID(self):
         return self._ID
 
-    
 
     
         
