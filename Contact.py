@@ -2,7 +2,6 @@ class Contact:
     
     
     def __init__(self,fName,lName,emailAddress,phoneNumber,ID):
-        
         self._fName=fName
         self._lName=lName
         self._emailAddress=emailAddress

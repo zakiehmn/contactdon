@@ -1,4 +1,6 @@
 from Contact import Contact
+import string
+import random
 class Contactdon:
     
     def __init__(self,contactList):
@@ -28,9 +30,8 @@ class Contactdon:
         
         
     def add_command(self,splitCommand):
-        id=0
         if(splitCommand[0]=="add"):
-            id=id+1
+            id=self.generate_id()
             for x in range(len(splitCommand)):
                 if(splitCommand[x]=="-f"):
                     fname=splitCommand[x+1]
@@ -45,7 +46,22 @@ class Contactdon:
             else:
                 print("command failed")
 
-
+    def generate_id(self):
+        unique=True
+        n=len(self.contactList)
+        letters=string.digits
+        id=''.join(random.choice(letters) for i in range(5))
+        if(n>0):
+            for i in range(n):
+                if(self.contactList[i]==id):
+                    unique=False
+        if(unique):
+            return id
+        else:
+            self.generate_id()
+       
+        
+   
 
 
     def check_unique(self,fname,lname,emailaddress,phonenumber):
