@@ -5,8 +5,9 @@ class Contactdon:
         self.contactList=contactList
 
 
-    def add_contact(self,fName,lName,emailAddress,phoneNumber):
-        newContact=Contact(fName,lName,emailAddress,phoneNumber)
+    def add_contact(self,fName,lName,emailAddress,phoneNumber,id):
+        
+        newContact=Contact(fName,lName,emailAddress,phoneNumber,id)
         self.contactList.append(newContact)
         print("command ok")
         # self.printlist()
@@ -19,7 +20,17 @@ class Contactdon:
         n=splitCommand.count("")
         for i in range(n):
             splitCommand.remove("")
+        if(splitCommand[0]=="print"):
+            self.print_list()
+        self.add_command(splitCommand)
+        self.search_command(splitCommand)
+        self.command()
+        
+        
+    def add_command(self,splitCommand):
+        id=0
         if(splitCommand[0]=="add"):
+            id=id+1
             for x in range(len(splitCommand)):
                 if(splitCommand[x]=="-f"):
                     fname=splitCommand[x+1]
@@ -30,13 +41,12 @@ class Contactdon:
                 if(splitCommand[x]=="-p"):
                     phonenumber=splitCommand[x+1]
             if(self.check_unique(fname, lname, emailaddress, phonenumber)==True):
-                self.add_contact(fname, lname, emailaddress, phonenumber)
+                self.add_contact(fname, lname, emailaddress, phonenumber,id)
             else:
                 print("command failed")
-        else:
-            print("command failed")
-        self.command()
-        
+
+
+
 
     def check_unique(self,fname,lname,emailaddress,phonenumber):
         check=False
@@ -56,7 +66,30 @@ class Contactdon:
 
         return check
 
+    def search_command(self,splitCommand):
+        if(splitCommand[0]=="search"):
+            for x in range(len(self.contactList)):
+                if(self.contactList[x]._fName.startswith(splitCommand[1]) or self.contactList[x]._lName.startswith(splitCommand[1]) or self.contactList[x]._emailAddress.startswith(splitCommand[1]) or self.contactList[x]._phoneNumber.startswith(splitCommand[1]) or self.contactList[x]._fName.endswith(splitCommand[1]) or self.contactList[x]._lName.endswith(splitCommand[1]) or self.contactList[x]._emailAddress.endswith(splitCommand[1]) or self.contactList[x]._phoneNumber.endswith(splitCommand[1])):
+                    self.print_contact(x)
 
+    # def start_end_with(self,splitCommand,x):
+    #     if(self.contactList[x]._fName.startswith(splitCommand[1] or self.contactList[x]._lName.startswith(splitCommand[1] or self.contactList[x]._emailAddress.startswith(splitCommand[1] or self.contactList[x]._phoneNumber.startswith(splitCommand[1] or self.contactList[x]._fName.endswith(splitCommand[1] or self.contactList[x]._lName.endswith(splitCommand[1] or self.contactList[x]._emailAddress.endswith(splitCommand[1] or self.contactList[x]._phoneNumber.endswith(splitCommand[1]):
+    #          self.print_contact(x)
+
+    def print_contact(self, indexContact):
+        print("{} {} {} {} {}".format(self.contactList[indexContact]._ID , self.contactList[indexContact]._fName,self.contactList[indexContact]._lName , self.contactList[indexContact]._emailAddress , self.contactList[indexContact]._phoneNumber ))
+
+
+
+    def print_list(self):
+        for i in range(len(self.contactList)):
+            print(self.contactList[i]._ID)
+            print(self.contactList[i]._fName)
+            print(self.contactList[i]._lName)
+            print(self.contactList[i]._emailAddress)
+            print(self.contactList[i]._phoneNumber)
+
+    
 
 
     # def printdata(self,fname,lname,emailaddress,phonenumber):
