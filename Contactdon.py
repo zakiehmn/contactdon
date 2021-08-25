@@ -8,7 +8,6 @@ class Contactdon:
 
 
     def add_contact(self,fName,lName,emailAddress,phoneNumber,id):
-        
         newContact=Contact(fName,lName,emailAddress,phoneNumber,id)
         self.contactList.append(newContact)
         print("command ok")
@@ -26,25 +25,44 @@ class Contactdon:
             self.print_list()
         self.add_command(splitCommand)
         self.search_command(splitCommand)
+        self.delete_command(splitCommand)
+        self.update_command(splitCommand)
+        self.other_command(splitCommand)
         self.command()
         
         
     def add_command(self,splitCommand):
+        existF=False
+        existL=False
+        existE=False
+        existP=False
         if(splitCommand[0]=="add"):
             id=self.generate_id()
             for x in range(len(splitCommand)):
                 if(splitCommand[x]=="-f"):
                     fname=splitCommand[x+1]
+                    existF=True
                 if(splitCommand[x]=="-l"):
                     lname=splitCommand[x+1]
+                    existL=True
                 if(splitCommand[x]=="-e"):
                     emailaddress=splitCommand[x+1]
+                    existE=True
                 if(splitCommand[x]=="-p"):
                     phonenumber=splitCommand[x+1]
-            if(self.check_unique(fname, lname, emailaddress, phonenumber)==True):
+                    existP=True
+            if(self.check_unique(fname, lname, emailaddress, phonenumber) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) and self.checkFLEP(existF, existL, existE, existP)):
                 self.add_contact(fname, lname, emailaddress, phonenumber,id)
             else:
                 print("command failed")
+
+    def checkFLEP(self,existF,existL,existE,existP):
+        if(existF==True and existL==True and existE==True and existP==True):
+            return True
+        else:
+            return False
+
+    
 
     def generate_id(self):
         unique=True
@@ -61,8 +79,6 @@ class Contactdon:
             self.generate_id()
        
         
-   
-
 
     def check_unique(self,fname,lname,emailaddress,phonenumber):
         check=False
@@ -82,19 +98,78 @@ class Contactdon:
 
         return check
 
+    def check_correctPhoneNum(self,phonenumber):
+        if(phonenumber.isdigit() and phonenumber.startswith("09") and len(phonenumber)==11):
+            return True
+        else:
+            return False
+
+    def check_correctEmail(self, emailaddress):
+        if "@" in emailaddress and "." in emailaddress:
+            if(emailaddress.find("@")<emailaddress.find(".")):
+                return True
+            else:
+                return False
+        else:
+            False
+
     def search_command(self,splitCommand):
         if(splitCommand[0]=="search"):
             for x in range(len(self.contactList)):
                 if(self.contactList[x]._fName.startswith(splitCommand[1]) or self.contactList[x]._lName.startswith(splitCommand[1]) or self.contactList[x]._emailAddress.startswith(splitCommand[1]) or self.contactList[x]._phoneNumber.startswith(splitCommand[1]) or self.contactList[x]._fName.endswith(splitCommand[1]) or self.contactList[x]._lName.endswith(splitCommand[1]) or self.contactList[x]._emailAddress.endswith(splitCommand[1]) or self.contactList[x]._phoneNumber.endswith(splitCommand[1])):
                     self.print_contact(x)
 
-    # def start_end_with(self,splitCommand,x):
-    #     if(self.contactList[x]._fName.startswith(splitCommand[1] or self.contactList[x]._lName.startswith(splitCommand[1] or self.contactList[x]._emailAddress.startswith(splitCommand[1] or self.contactList[x]._phoneNumber.startswith(splitCommand[1] or self.contactList[x]._fName.endswith(splitCommand[1] or self.contactList[x]._lName.endswith(splitCommand[1] or self.contactList[x]._emailAddress.endswith(splitCommand[1] or self.contactList[x]._phoneNumber.endswith(splitCommand[1]):
-    #          self.print_contact(x)
 
     def print_contact(self, indexContact):
         print("{} {} {} {} {}".format(self.contactList[indexContact]._ID , self.contactList[indexContact]._fName,self.contactList[indexContact]._lName , self.contactList[indexContact]._emailAddress , self.contactList[indexContact]._phoneNumber ))
 
+
+
+    def delete_command(self,splitCommand):
+        if(splitCommand[0]=="delete"):
+            indexD=self.search_id(splitCommand)
+            if(indexD!=None):
+                self.contactList.pop(indexD)
+                print("command ok")
+            else:
+                print("command failed")
+
+    def update_command(self,splitCommand):
+        check=True
+        # checkE=True
+        if(splitCommand[0]=="update"):
+            indexU=self.search_id(splitCommand)
+           
+            if(indexU!=None):
+                for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-p"):
+                        if(self.check_correctPhoneNum(splitCommand[x+1])==False):
+                            check=False
+                            
+            if(indexU!=None):
+                for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-e"):
+                        if(self.check_correctEmail(splitCommand[x+1])==False):
+                            check=False
+            if(indexU==None or check==False ):
+                print("command failed")
+            else:       
+                for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-f"):
+                        self.contactList[indexU].set_fName(splitCommand[x+1])
+                    if(splitCommand[x]=="-l"):
+                        self.contactList[indexU].set_lName(splitCommand[x+1])
+                    if(splitCommand[x]=="-e"):
+                        self.contactList[indexU].set_emailAddress(splitCommand[x+1])
+                    if(splitCommand[x]=="-p"):
+                        self.contactList[indexU].set_phoneNumber(splitCommand[x+1])
+                print("command ok")
+
+
+    def search_id(self,splitCommand):
+        for x in range(len(self.contactList)):
+                if(splitCommand[1]==self.contactList[x]._ID):
+                    return x
 
 
     def print_list(self):
@@ -105,7 +180,9 @@ class Contactdon:
             print(self.contactList[i]._emailAddress)
             print(self.contactList[i]._phoneNumber)
 
-    
+    def other_command(self,splitCommand):
+        if(splitCommand[0]!="add" and splitCommand[0]!="search" and splitCommand[0]!="update" and splitCommand[0]!="delete"):
+            print("command failed")
 
 
     # def printdata(self,fname,lname,emailaddress,phonenumber):
