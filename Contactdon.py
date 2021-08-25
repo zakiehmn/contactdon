@@ -21,8 +21,6 @@ class Contactdon:
         n=splitCommand.count("")
         for i in range(n):
             splitCommand.remove("")
-        if(splitCommand[0]=="print"):
-            self.print_list()
         self.add_command(splitCommand)
         self.search_command(splitCommand)
         self.delete_command(splitCommand)
@@ -51,13 +49,14 @@ class Contactdon:
                 if(splitCommand[x]=="-p"):
                     phonenumber=splitCommand[x+1]
                     existP=True
-            if(self.check_unique(fname, lname, emailaddress, phonenumber) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) and self.checkFLEP(existF, existL, existE, existP)):
-                self.add_contact(fname, lname, emailaddress, phonenumber,id)
+            if(self.checkFLEP(existF, existL, existE, existP)):
+                if(self.check_unique(fname, lname, emailaddress, phonenumber) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
+                    self.add_contact(fname, lname, emailaddress, phonenumber,id)
             else:
                 print("command failed")
 
     def checkFLEP(self,existF,existL,existE,existP):
-        if(existF==True and existL==True and existE==True and existP==True):
+        if(existF and existL and existE and existP):
             return True
         else:
             return False
