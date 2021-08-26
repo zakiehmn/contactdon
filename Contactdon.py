@@ -52,8 +52,8 @@ class Contactdon:
             if(self.checkFLEP(existF, existL, existE, existP)):
                 if(self.check_unique(fname, lname, emailaddress, phonenumber) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
                     self.add_contact(fname, lname, emailaddress, phonenumber,id)
-            else:
-                print("command failed")
+                else:
+                    print("command failed")
 
     def checkFLEP(self,existF,existL,existE,existP):
         if(existF and existL and existE and existP):
@@ -161,6 +161,16 @@ class Contactdon:
                         if(self.check_uniqueUL(indexU,splitCommand[x+1])==False):
                             check=False
 
+            for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-p"):
+                        if(self.check_uniqueUP(indexU,splitCommand[x+1])==False):
+                            check=False
+
+            for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-e"):
+                        if(self.check_uniqueUE(indexU,splitCommand[x+1])==False):
+                            check=False
+
             if(indexU==None or check==False ):
                 print("command failed")
             else:       
@@ -187,6 +197,15 @@ class Contactdon:
             if(lname==self.contactList[i]._lName and self.contactList[indexU]._fName==self.contactList[i]._fName ):
                 return False
 
+    def check_uniqueUP(self,indexU,phonenumber):
+         for i in range(len(self.contactList)):
+             if(self.contactList[i]._phoneNumber==phonenumber ):
+                 return False
+
+    def check_uniqueUE(self,indexU,emailaddress):
+        for i in range(len(self.contactList)):
+             if(self.contactList[i]._emailAddress==emailaddress):
+                 return False
 
 
     def search_id(self,splitCommand):
