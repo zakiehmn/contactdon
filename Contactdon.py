@@ -94,7 +94,7 @@ class Contactdon:
                     check=True
                 else:
                     check=False
-
+                    
         return check
 
     def check_correctPhoneNum(self,phonenumber):
@@ -150,6 +150,17 @@ class Contactdon:
                     if(splitCommand[x]=="-e"):
                         if(self.check_correctEmail(splitCommand[x+1])==False):
                             check=False
+
+            for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-f"):
+                        if(self.check_uniqueUF(indexU,splitCommand[x+1])==False):
+                            check=False
+
+            for x in range(len(splitCommand)):
+                    if(splitCommand[x]=="-l"):
+                        if(self.check_uniqueUL(indexU,splitCommand[x+1])==False):
+                            check=False
+
             if(indexU==None or check==False ):
                 print("command failed")
             else:       
@@ -163,6 +174,19 @@ class Contactdon:
                     if(splitCommand[x]=="-p"):
                         self.contactList[indexU].set_phoneNumber(splitCommand[x+1])
                 print("command ok")
+
+
+    def check_uniqueUF(self,indexU,fname):
+        for i in range(len(self.contactList)):
+            if(fname==self.contactList[i]._fName and self.contactList[indexU]._lName==self.contactList[i]._lName ):
+                return False
+
+
+    def check_uniqueUL(self,indexU,lname):
+        for i in range(len(self.contactList)):
+            if(lname==self.contactList[i]._lName and self.contactList[indexU]._fName==self.contactList[i]._fName ):
+                return False
+
 
 
     def search_id(self,splitCommand):
