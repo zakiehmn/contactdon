@@ -1,6 +1,7 @@
 from Contact import Contact
 import string
 import random
+import csv
 class Contactdon:
     
     def __init__(self,contactList):
@@ -11,8 +12,7 @@ class Contactdon:
         newContact=Contact(fName,lName,emailAddress,phoneNumber,id)
         self.contactList.append(newContact)
         print("command ok")
-        # self.printlist()
-        # self.printdata(fName,lName,emailAddress,phoneNumber)
+        
 
     def command(self):
         splitCommand=[]
@@ -226,11 +226,6 @@ class Contactdon:
         if(splitCommand[0]!="add" and splitCommand[0]!="search" and splitCommand[0]!="update" and splitCommand[0]!="delete"):
             print("command failed")
 
-
-    # def printdata(self,fname,lname,emailaddress,phonenumber):
-    #     print(fname,lname,emailaddress,phonenumber)
-    # def printlist(self):
-    #     print(self.contactList[0]._fName)
 
     
 
