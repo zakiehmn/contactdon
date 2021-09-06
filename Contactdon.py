@@ -10,7 +10,7 @@ class Contactdon:
     def add_contact(self,fName,lName,emailAddress,phoneNumber,id):
         newContact=Contact(fName,lName,emailAddress,phoneNumber,id)
         self.contactDic[id] = newContact
-        print("command ok")
+        return True
         
 
     def input_command(self):
@@ -21,17 +21,28 @@ class Contactdon:
         for i in range(n):
             splitCommand.remove("")
         if(splitCommand[0]=="add"):
-            self.add(splitCommand)
+            statusAdd=self.add(splitCommand)
+            self.print_result(statusAdd)
         if(splitCommand[0]=="search"):
             self.search(splitCommand[1])
+
         if(splitCommand[0]=="delete"):
-            self.delete(splitCommand[1])
+            statusDel=self.delete(splitCommand[1])
+            self.print_result(statusDel)
+
         if(splitCommand[0]=="update"):
-            self.update(splitCommand)
+            statusUpd=self.update(splitCommand)
+            self.print_result(statusUpd)
+
         self.other_command(splitCommand)
-        self.command()
+
+        self.input_command()
         
-        
+    def print_result(self, status):
+        if(status):
+            print("command ok")
+        else:
+            print("command failed")
    
 
     def check_uniqueID(self, id):
@@ -46,7 +57,7 @@ class Contactdon:
             return id
         return self.generate_id()
        
-
+        
     def add(self,splitCommand):
         existF=False
         existL=False
@@ -69,9 +80,16 @@ class Contactdon:
         if(self.checkFLEP(existF, existL, existE, existP)):
             if(self.check_unique_fnln(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
                 self.add_contact(fname, lname, emailaddress, phonenumber,id)
+                return True
             else:
-                print("command failed")
+                return False
         
+    def checkFLEP(self, existF, existL, existE, existP):
+        if(existF and existL and existE and existP):
+            return True
+        else:
+            return False
+
 
     def check_unique_fnln(self, fname, lname):
         check=False
@@ -114,9 +132,11 @@ class Contactdon:
     def delete(self,id):
         if(id in self.contactDic.keys()):
             self.contactDic.pop(id)
-            print("command ok")
+            return True
+            # print("command ok")
         else:
-            print("command failed")
+            # print("command failed")
+            return False
            
 
     def update(self,splitCommand):
@@ -138,7 +158,8 @@ class Contactdon:
                     check=False
 
         if(check==False):
-            print("command failed")
+            # print("command failed")
+            return False
         else:
             for x in range(len(splitCommand)):
                 if(splitCommand[x]=="-f"):
@@ -149,7 +170,7 @@ class Contactdon:
                     self.contactDic[splitCommand[1]]._emailAddress=splitCommand[x+1]
                 if(splitCommand[x]=="-p"):
                     self.contactDic[splitCommand[1]]._phoneNumber=splitCommand[x+1]
-            print("command ok")
+            return True
                 
 
 
