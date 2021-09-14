@@ -1,12 +1,13 @@
 from Contact import Contact
 import string
 import random
-import csv
+import json
 class Contactdon:
     
     def __init__(self, contactDic = {}):
         self.contactDic = contactDic
-        
+        self.read_json()
+              
     def add_contact(self, fName, lName, emailAddress, phoneNumber, id):
         newContact = Contact(fName,lName,emailAddress,phoneNumber,id)
         self.contactDic[id] = newContact
@@ -35,8 +36,10 @@ class Contactdon:
             statusUpd=self.update(splitCommand)
             self.print_result(statusUpd)
 
+        if(splitCommand[0] == "exit"):
+            self.exit()
         self.other_command(splitCommand)
-
+        
         self.input_command()
         
     def print_result(self, status):
@@ -80,14 +83,12 @@ class Contactdon:
             if(self.check_unique_fnln(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
                 self.add_contact(fname, lname, emailaddress, phonenumber,id)
                 return True
-            else:
-                return False
+            return False
         
     def checkFLEP(self, existF, existL, existE, existP):
         if(existF and existL and existE and existP):
             return True
-        else:
-            return False
+        return False
 
     def check_unique_fnln(self, fname, lname):
         check=False
@@ -107,8 +108,7 @@ class Contactdon:
         if "@" in emailaddress and "." in emailaddress:
             if(emailaddress.find("@") < emailaddress.find(".")):
                 return True
-            else:
-                return False
+            return False
         else:
             False
 
@@ -124,8 +124,7 @@ class Contactdon:
         if(id in self.contactDic.keys()):
             self.contactDic.pop(id)
             return True
-        else:
-            return False
+        return False
            
     def update(self, splitCommand):
         check = True
@@ -180,18 +179,30 @@ class Contactdon:
             if(self.contactDic[contact]._emailAddress == emailaddress):
                 return False
       
-    def print_list(self):
-        for i in range(len(self.contactList)):
-            print(self.contactList[i]._ID)
-            print(self.contactList[i]._fName)
-            print(self.contactList[i]._lName)
-            print(self.contactList[i]._emailAddress)
-            print(self.contactList[i]._phoneNumber)
-
     def other_command(self,splitCommand):
-        if(splitCommand[0] != "add" and splitCommand[0] != "search" and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print"):
+        if(splitCommand[0] != "add" and splitCommand[0] != "exit" and splitCommand[0] != "search" and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print"):
             print("command failed")
 
+    def exit(self):
+        self.write_json()
+        quit()
 
-    
+    def write_json(self):
+        listDict = []
+        for contact in self.contactDic.values():
+            listDict.append(contact.__dict__)
+
+        with open('contactdict.json','w') as fp:
+            json.dump(listDict, fp)
+            
+
+    def read_json(self):
+        with open('contactdict.json') as fp:
+            listdict = json.load(fp)
+            
+        for i in range(len(listdict)):
+                self.add_contact(listdict[i].get("_fName"), listdict[i].get("_lName"), listdict[i].get("_emailAddress"), listdict[i].get("_phoneNumber"), listdict[i].get("_ID"))
+
+
+        
 
