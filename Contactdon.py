@@ -79,18 +79,18 @@ class Contactdon:
             if(splitCommand[x] == "-p"):
                 phonenumber = splitCommand[x+1]
                 existP=True
-        if(self.checkFLEP(existF, existL, existE, existP)):
-            if(self.check_unique_fnln(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
+        if(self.check_exist_data(existF, existL, existE, existP)):
+            if(self.check_unique_fnamelname(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
                 self.add_contact(fname, lname, emailaddress, phonenumber,id)
                 return True
             return False
         
-    def checkFLEP(self, existF, existL, existE, existP):
+    def check_exist_data(self, existF, existL, existE, existP):
         if(existF and existL and existE and existP):
             return True
         return False
 
-    def check_unique_fnln(self, fname, lname):
+    def check_unique_fnamelname(self, fname, lname):
         check=False
         n=len(self.contactDic)
         if(n>0):
@@ -133,16 +133,16 @@ class Contactdon:
             check = False
         for i in range(len(splitCommand)):
             if(splitCommand[i] == "-f"):
-                if(self.check_uniqueUF(splitCommand[1], splitCommand[i+1]) == False):
+                if(self.check_unique_fname(splitCommand[1], splitCommand[i+1]) == False):
                     check = False
             if(splitCommand[i] == "-l"):
-                if(self.check_uniqueUL(splitCommand[1], splitCommand[i+1]) == False):
+                if(self.check_unique_lname(splitCommand[1], splitCommand[i+1]) == False):
                     check = False
             if(splitCommand[i] == "-e"):
-                if(self.check_uniqueUE(splitCommand[i+1])==False or self.check_correctEmail(splitCommand[i+1]) == False):
+                if(self.check_unique_emailaddress(splitCommand[i+1])==False or self.check_correctEmail(splitCommand[i+1]) == False):
                     check = False
             if(splitCommand[i] == "-p"):
-                if(self.check_uniqueUP(splitCommand[i+1]) == False or self.check_correctPhoneNum(splitCommand[i+1]) == False):
+                if(self.check_unique_phonenum(splitCommand[i+1]) == False or self.check_correctPhoneNum(splitCommand[i+1]) == False):
                     check = False
 
         if(check == False):
@@ -159,23 +159,23 @@ class Contactdon:
                     self.contactDic[splitCommand[1]]._phoneNumber = splitCommand[x+1]
             return True
                 
-    def check_uniqueUF(self, id, fname):
+    def check_unique_fname(self, id, fname):
         for contact in self.contactDic:
             if(fname == self.contactDic[contact]._fName and self.contactDic[id]._lName == self.contactDic[contact]._lName):
                 return False
         return True
         
-    def check_uniqueUL(self, id, lname):
+    def check_unique_lname(self, id, lname):
         for contact in self.contactDic:
             if(lname == self.contactDic[contact]._lName and self.contactDic[id]._fName == self.contactDic[contact]._fName ):
                 return False
 
-    def check_uniqueUP(self, phonenumber):
+    def check_unique_phonenum(self, phonenumber):
         for contact in self.contactDic:
             if(self.contactDic[contact]._phoneNumber == phonenumber):
                 return False
        
-    def check_uniqueUE(self, emailaddress):
+    def check_unique_emailaddress(self, emailaddress):
         for contact in self.contactDic:
             if(self.contactDic[contact]._emailAddress == emailaddress):
                 return False

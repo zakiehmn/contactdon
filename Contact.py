@@ -8,7 +8,7 @@ class Contact:
         self._ID = ID
 
     def __str__(self):
-       return '{} {} {} {}'.format(self._ID, self._fName, self._lName, self._emailAddress, self._phoneNumber)
+       return '{} {} {} {} {}'.format(self._ID, self._fName, self._lName, self._emailAddress, self._phoneNumber)
 
    
 
