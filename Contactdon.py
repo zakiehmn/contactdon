@@ -115,7 +115,6 @@ class Contactdon:
     def search(self, word):
         for contact in self.contactDic:
             if(self.contactDic[contact]._fName.startswith(word) or self.contactDic[contact]._lName.startswith(word) or self.contactDic[contact]._emailAddress.startswith(word) or self.contactDic[contact]._phoneNumber.startswith(word) or self.contactDic[contact]._fName.endswith(word) or self.contactDic[contact]._lName.endswith(word) or self.contactDic[contact]._emailAddress.endswith(word) or self.contactDic[contact]._phoneNumber.endswith(word)):
-                # self.print_contact(self.contactDic[contact]._ID)
                 print(self.contactDic[contact])
            
     # def print_contact(self, id):
@@ -128,6 +127,14 @@ class Contactdon:
         return False
            
     def update(self, splitCommand):
+        check = self.check_update(splitCommand)
+        if(check == False):
+            return False
+        else:
+            self.update_data(splitCommand)
+            return True
+
+    def check_update(self, splitCommand):
         check = True
         if(not (splitCommand[1] in self.contactDic.keys())):
             check = False
@@ -144,11 +151,10 @@ class Contactdon:
             if(splitCommand[i] == "-p"):
                 if(self.check_unique_phonenum(splitCommand[i+1]) == False or self.check_correctPhoneNum(splitCommand[i+1]) == False):
                     check = False
+        return check
 
-        if(check == False):
-            return False
-        else:
-            for x in range(len(splitCommand)):
+    def update_data(self, splitCommand):
+         for x in range(len(splitCommand)):
                 if(splitCommand[x] == "-f"):
                     self.contactDic[splitCommand[1]]._fName = splitCommand[x+1]
                 if(splitCommand[x] == "-l"):
@@ -157,7 +163,6 @@ class Contactdon:
                     self.contactDic[splitCommand[1]]._emailAddress = splitCommand[x+1]
                 if(splitCommand[x] == "-p"):
                     self.contactDic[splitCommand[1]]._phoneNumber = splitCommand[x+1]
-            return True
                 
     def check_unique_fname(self, id, fname):
         for contact in self.contactDic:
@@ -169,16 +174,19 @@ class Contactdon:
         for contact in self.contactDic:
             if(lname == self.contactDic[contact]._lName and self.contactDic[id]._fName == self.contactDic[contact]._fName ):
                 return False
+        return True
 
     def check_unique_phonenum(self, phonenumber):
         for contact in self.contactDic:
             if(self.contactDic[contact]._phoneNumber == phonenumber):
                 return False
+        return True
        
     def check_unique_emailaddress(self, emailaddress):
         for contact in self.contactDic:
             if(self.contactDic[contact]._emailAddress == emailaddress):
                 return False
+        return True
       
     def other_command(self,splitCommand):
         if(splitCommand[0] != "add" and splitCommand[0] != "exit" and splitCommand[0] != "search" and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print"):
