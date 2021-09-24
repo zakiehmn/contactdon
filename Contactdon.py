@@ -9,7 +9,7 @@ class Contactdon:
         self.read_json()
               
     def add_contact(self, fName, lName, emailAddress, phoneNumber, id):
-        newContact = Contact(fName,lName,emailAddress,phoneNumber,id)
+        newContact = Contact(fName, lName, emailAddress, phoneNumber, id)
         self.contactDic[id] = newContact
         return True
         
@@ -115,10 +115,11 @@ class Contactdon:
     def search(self, word):
         for contact in self.contactDic:
             if(self.contactDic[contact]._fName.startswith(word) or self.contactDic[contact]._lName.startswith(word) or self.contactDic[contact]._emailAddress.startswith(word) or self.contactDic[contact]._phoneNumber.startswith(word) or self.contactDic[contact]._fName.endswith(word) or self.contactDic[contact]._lName.endswith(word) or self.contactDic[contact]._emailAddress.endswith(word) or self.contactDic[contact]._phoneNumber.endswith(word)):
-                self.print_contact(self.contactDic[contact]._ID)
+                # self.print_contact(self.contactDic[contact]._ID)
+                print(self.contactDic[contact])
            
-    def print_contact(self, id):
-        print("{} {} {} {} {}".format(self.contactDic[id]._ID , self.contactDic[id]._fName , self.contactDic[id]._lName , self.contactDic[id]._emailAddress , self.contactDic[id]._phoneNumber ))
+    # def print_contact(self, id):
+    #     print("{} {} {} {} {}".format(self.contactDic[id]._ID , self.contactDic[id]._fName , self.contactDic[id]._lName , self.contactDic[id]._emailAddress , self.contactDic[id]._phoneNumber ))
 
     def delete(self, id):
         if(id in self.contactDic.keys()):
