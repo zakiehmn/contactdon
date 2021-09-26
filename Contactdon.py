@@ -1,12 +1,14 @@
 from Contact import Contact
+from UserInterface import UserInterface
 import string
 import random
 import json
 class Contactdon:
     
-    def __init__(self, contactDic = {}):
+    def __init__(self, contactDic = {}, fileName = 'contactdict.json'):
         self.contactDic = contactDic
-        self.read_json()
+        self.fileName = fileName
+        self.read_json(fileName)
               
     def add_contact(self, fName, lName, emailAddress, phoneNumber, id):
         newContact = Contact(fName, lName, emailAddress, phoneNumber, id)
@@ -14,12 +16,15 @@ class Contactdon:
         return True
         
     def input_command(self):
-        splitCommand = []
-        inputCommand = input()
-        splitCommand = inputCommand.split(" ")
-        n = splitCommand.count("")
-        for i in range(n):
-            splitCommand.remove("")
+        # splitCommand = []
+        # inputCommand = input()
+        # splitCommand = inputCommand.split(" ")
+        # n = splitCommand.count("")
+        # for i in range(n):
+        #     splitCommand.remove("")
+
+        UserInterface1 = UserInterface()
+        splitCommand = UserInterface1.input()
 
         if(splitCommand[0] == "add"):
             statusAdd = self.add(splitCommand)
@@ -43,10 +48,12 @@ class Contactdon:
         self.input_command()
         
     def print_result(self, status):
-        if(status):
-            print("command ok")
-        else:
-            print("command failed")
+        # if(status):
+        #     print("command ok")
+        # else:
+        #     print("command failed")
+        UserInterface1 = UserInterface()
+        UserInterface1.output(status)
    
     def check_uniqueID(self, id):
         if id in self.contactDic.keys():
@@ -193,20 +200,20 @@ class Contactdon:
             print("command failed")
 
     def exit(self):
-        self.write_json()
+        self.write_json(self.fileName)
         quit()
 
-    def write_json(self):
+    def write_json(self, fileName):
         listDict = []
         for contact in self.contactDic.values():
             listDict.append(contact.__dict__)
 
-        with open('contactdict.json','w') as fp:
+        with open(fileName,'w') as fp:
             json.dump(listDict, fp)
             
 
-    def read_json(self):
-        with open('contactdict.json') as fp:
+    def read_json(self, fileName):
+        with open(fileName) as fp:
             listdict = json.load(fp)
             
         for i in range(len(listdict)):
