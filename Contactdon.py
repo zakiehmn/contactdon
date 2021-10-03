@@ -5,10 +5,12 @@ import random
 import json
 class Contactdon:
     
-    def __init__(self, contactDic = {}, fileName = 'contactdict.json'):
+    def __init__(self, contactDic = {}, fileName = 'contactdict.json', groups = []):
         self.contactDic = contactDic
         self.fileName = fileName
+        self.groups = groups
         self.read_json(fileName)
+        
               
     def add_contact(self, fName, lName, emailAddress, phoneNumber, id):
         newContact = Contact(fName, lName, emailAddress, phoneNumber, id)
@@ -16,13 +18,6 @@ class Contactdon:
         return True
         
     def input_command(self):
-        # splitCommand = []
-        # inputCommand = input()
-        # splitCommand = inputCommand.split(" ")
-        # n = splitCommand.count("")
-        # for i in range(n):
-        #     splitCommand.remove("")
-
         UserInterface1 = UserInterface()
         splitCommand = UserInterface1.input()
 
@@ -34,24 +29,29 @@ class Contactdon:
             self.search(splitCommand[1])
 
         if(splitCommand[0] == "delete"):
-            statusDel=self.delete(splitCommand[1])
+            statusDel = self.delete(splitCommand[1])
             self.print_result(statusDel)
 
         if(splitCommand[0] == "update"):
-            statusUpd=self.update(splitCommand)
+            statusUpd = self.update(splitCommand)
             self.print_result(statusUpd)
+
+        if(splitCommand[0] == "addgroup"):
+            statusGroup = self.add_group(splitCommand)
+            self.print_result(statusGroup)
+
+        if(splitCommand[0] == "showgroup"):
+            self.show_group(splitCommand[1])
 
         if(splitCommand[0] == "exit"):
             self.exit()
+
+        
         self.other_command(splitCommand)
         
         self.input_command()
         
     def print_result(self, status):
-        # if(status):
-        #     print("command ok")
-        # else:
-        #     print("command failed")
         UserInterface1 = UserInterface()
         UserInterface1.output(status)
    
@@ -75,16 +75,16 @@ class Contactdon:
         id=self.generate_id()
         for x in range(len(splitCommand)):
             if(splitCommand[x] == "-f"):
-                fname = splitCommand[x+1]
+                fname = splitCommand[x + 1]
                 existF = True
             if(splitCommand[x] == "-l"):
-                lname = splitCommand[x+1]
+                lname = splitCommand[x + 1]
                 existL = True
             if(splitCommand[x] == "-e"):
-                emailaddress = splitCommand[x+1]
+                emailaddress = splitCommand[x + 1]
                 existE=True
             if(splitCommand[x] == "-p"):
-                phonenumber = splitCommand[x+1]
+                phonenumber = splitCommand[x + 1]
                 existP=True
         if(self.check_exist_data(existF, existL, existE, existP)):
             if(self.check_unique_fnamelname(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
@@ -123,9 +123,8 @@ class Contactdon:
         for contact in self.contactDic:
             if(self.contactDic[contact]._fName.startswith(word) or self.contactDic[contact]._lName.startswith(word) or self.contactDic[contact]._emailAddress.startswith(word) or self.contactDic[contact]._phoneNumber.startswith(word) or self.contactDic[contact]._fName.endswith(word) or self.contactDic[contact]._lName.endswith(word) or self.contactDic[contact]._emailAddress.endswith(word) or self.contactDic[contact]._phoneNumber.endswith(word)):
                 print(self.contactDic[contact])
-           
-    # def print_contact(self, id):
-    #     print("{} {} {} {} {}".format(self.contactDic[id]._ID , self.contactDic[id]._fName , self.contactDic[id]._lName , self.contactDic[id]._emailAddress , self.contactDic[id]._phoneNumber ))
+        
+        self.search_group(word)
 
     def delete(self, id):
         if(id in self.contactDic.keys()):
@@ -196,12 +195,61 @@ class Contactdon:
         return True
       
     def other_command(self,splitCommand):
-        if(splitCommand[0] != "add" and splitCommand[0] != "exit" and splitCommand[0] != "search" and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print"):
+        if(splitCommand[0] != "add" and splitCommand[0] != "exit" and splitCommand[0] != "search" and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print" and splitCommand[0] != "addgroup" and splitCommand[0] != "showgroup"):
             print("command failed")
 
     def exit(self):
         self.write_json(self.fileName)
         quit()
+
+    def add_group(self, splitCommand):
+        groupContacts = []
+        for x in range(len(splitCommand)):
+            if(splitCommand[x] == "-n"):
+                group_name = splitCommand[x+1]
+            if(splitCommand[x] == "-c"):
+                IDs = splitCommand[x+1]
+
+        split_IDs = self.separate_IDs(IDs)
+       
+        if(len(split_IDs) != 0):
+            self.add_ID_group(group_name, split_IDs)
+            return True
+        else:
+            return False
+
+            
+    def separate_IDs(self, IDs):
+        split_IDs = IDs.split(",")
+        return split_IDs
+
+    def add_ID_group(self, name, groupIDs):
+        groupDict = {}
+        groupDict[name] = groupIDs
+        self.groups.append(groupDict)
+
+    def show_group(self, name):
+        for d in self.groups:
+            if name in d.keys():
+                for l in d.values():
+                    for id in l:
+                        print(self.contactDic[id])
+                                
+    def group_member(self, name):
+        for d in self.groups:
+            for group in d.keys():
+                if(name == group):
+                    idslist = d[group]
+        
+        return len(idslist)
+
+    def search_group(self, word):
+        for d in self.groups:
+            for group in d.keys():
+                if(group.startswith(word) or group.endswith(word)):
+                    member = self.group_member(group)
+                    print(group +"  " +  "members :"+ " " + str(member) )
+                    
 
     def write_json(self, fileName):
         listDict = []
@@ -209,15 +257,24 @@ class Contactdon:
             listDict.append(contact.__dict__)
 
         with open(fileName,'w') as fp:
-            json.dump(listDict, fp)
-            
-
+            json.dump(listDict, fp)    
+       
+        with open("groupsList.json",'w') as g:
+            json.dump(self.groups, g)
+        
     def read_json(self, fileName):
         with open(fileName) as fp:
             listdict = json.load(fp)
             
         for i in range(len(listdict)):
-                self.add_contact(listdict[i].get("_fName"), listdict[i].get("_lName"), listdict[i].get("_emailAddress"), listdict[i].get("_phoneNumber"), listdict[i].get("_ID"))
+            self.add_contact(listdict[i].get("_fName"), listdict[i].get("_lName"), listdict[i].get("_emailAddress"), listdict[i].get("_phoneNumber"), listdict[i].get("_ID"))
+
+        with open("groupsList.json") as g:
+            groupsDict = json.load(g)
+
+        for dicti in groupsDict:
+            self.groups.append(dicti)
+        
 
 
         
