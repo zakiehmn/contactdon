@@ -1,5 +1,4 @@
 from Contact import Contact
-from UserInterface import UserInterface
 import string
 import random
 import json
@@ -15,45 +14,46 @@ class Contactdon:
     def add_contact(self, fName, lName, emailAddress, phoneNumber, id):
         newContact = Contact(fName, lName, emailAddress, phoneNumber, id)
         self.contactDic[id] = newContact
+        # print(self.contactDic[id])
         return True
         
-    def input_command(self):
-        UserInterface1 = UserInterface()
-        splitCommand = UserInterface1.input()
+    # def input_command(self):
+    #     UserInterface1 = UserInterface()
+    #     splitCommand = UserInterface1.input()
 
-        if(splitCommand[0] == "add"):
-            statusAdd = self.add(splitCommand)
-            self.print_result(statusAdd)
+    #     if(splitCommand[0] == "add"):
+    #         statusAdd = self.add(splitCommand)
+    #         self.print_result(statusAdd)
 
-        if(splitCommand[0] == "search"):
-            self.search(splitCommand[1])
+    #     if(splitCommand[0] == "search"):
+    #         self.search(splitCommand[1])
 
-        if(splitCommand[0] == "delete"):
-            statusDel = self.delete(splitCommand[1])
-            self.print_result(statusDel)
+    #     if(splitCommand[0] == "delete"):
+    #         statusDel = self.delete(splitCommand[1])
+    #         self.print_result(statusDel)
 
-        if(splitCommand[0] == "update"):
-            statusUpd = self.update(splitCommand)
-            self.print_result(statusUpd)
+    #     if(splitCommand[0] == "update"):
+    #         statusUpd = self.update(splitCommand)
+    #         self.print_result(statusUpd)
 
-        if(splitCommand[0] == "addgroup"):
-            statusGroup = self.add_group(splitCommand)
-            self.print_result(statusGroup)
+    #     if(splitCommand[0] == "addgroup"):
+    #         statusGroup = self.add_group(splitCommand)
+    #         self.print_result(statusGroup)
 
-        if(splitCommand[0] == "showgroup"):
-            self.show_group(splitCommand[1])
+    #     if(splitCommand[0] == "showgroup"):
+    #         self.show_group(splitCommand[1])
 
-        if(splitCommand[0] == "exit"):
-            self.exit()
+    #     if(splitCommand[0] == "exit"):
+    #         self.exit()
 
         
-        self.other_command(splitCommand)
+    #     self.other_command(splitCommand)
         
-        self.input_command()
+    #     self.input_command()
         
-    def print_result(self, status):
-        UserInterface1 = UserInterface()
-        UserInterface1.output(status)
+    # def print_result(self, status):
+    #     UserInterface1 = UserInterface()
+    #     UserInterface1.output(status)
    
     def check_uniqueID(self, id):
         if id in self.contactDic.keys():
@@ -67,35 +67,41 @@ class Contactdon:
             return id
         return self.generate_id()
               
-    def add(self, splitCommand):
-        existF = False
-        existL = False
-        existE = False
-        existP = False
+    def add(self, paramsDict):
+        # existF = False
+        # existL = False
+        # existE = False
+        # existP = False
+        # id=self.generate_id()
+        # for x in range(len(splitCommand)):
+        #     if(splitCommand[x] == "-f"):
+        #         fname = splitCommand[x + 1]
+        #         existF = True
+        #     if(splitCommand[x] == "-l"):
+        #         lname = splitCommand[x + 1]
+        #         existL = True
+        #     if(splitCommand[x] == "-e"):
+        #         emailaddress = splitCommand[x + 1]
+        #         existE=True
+        #     if(splitCommand[x] == "-p"):
+        #         phonenumber = splitCommand[x + 1]
+        #         existP=True
+        # if(self.check_exist_data(existF, existL, existE, existP)):
+        #     if(self.check_unique_fnamelname(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
+        #         self.add_contact(fname, lname, emailaddress, phonenumber,id)
+        #         return True
+        #     return False
         id=self.generate_id()
-        for x in range(len(splitCommand)):
-            if(splitCommand[x] == "-f"):
-                fname = splitCommand[x + 1]
-                existF = True
-            if(splitCommand[x] == "-l"):
-                lname = splitCommand[x + 1]
-                existL = True
-            if(splitCommand[x] == "-e"):
-                emailaddress = splitCommand[x + 1]
-                existE=True
-            if(splitCommand[x] == "-p"):
-                phonenumber = splitCommand[x + 1]
-                existP=True
-        if(self.check_exist_data(existF, existL, existE, existP)):
-            if(self.check_unique_fnamelname(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
-                self.add_contact(fname, lname, emailaddress, phonenumber,id)
+        if(len(paramsDict.keys()) == 4):
+            if(self.check_unique_fnamelname(paramsDict["first name"], paramsDict["last name"]) and self.check_correctPhoneNum(paramsDict["phone number"]) and self.check_correctEmail(paramsDict["email address"]) ):
+                self.add_contact(paramsDict["first name"], paramsDict["last name"], paramsDict["email address"], paramsDict["phone number"], id)
                 return True
-            return False
-        
-    def check_exist_data(self, existF, existL, existE, existP):
-        if(existF and existL and existE and existP):
-            return True
         return False
+
+    # def check_exist_data(self, existF, existL, existE, existP):
+    #     if(existF and existL and existE and existP):
+    #         return True
+    #     return False
 
     def check_unique_fnamelname(self, fname, lname):
         check=False
