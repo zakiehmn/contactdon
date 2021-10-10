@@ -17,44 +17,6 @@ class Contactdon:
         # print(self.contactDic[id])
         return True
         
-    # def input_command(self):
-    #     UserInterface1 = UserInterface()
-    #     splitCommand = UserInterface1.input()
-
-    #     if(splitCommand[0] == "add"):
-    #         statusAdd = self.add(splitCommand)
-    #         self.print_result(statusAdd)
-
-    #     if(splitCommand[0] == "search"):
-    #         self.search(splitCommand[1])
-
-    #     if(splitCommand[0] == "delete"):
-    #         statusDel = self.delete(splitCommand[1])
-    #         self.print_result(statusDel)
-
-    #     if(splitCommand[0] == "update"):
-    #         statusUpd = self.update(splitCommand)
-    #         self.print_result(statusUpd)
-
-    #     if(splitCommand[0] == "addgroup"):
-    #         statusGroup = self.add_group(splitCommand)
-    #         self.print_result(statusGroup)
-
-    #     if(splitCommand[0] == "showgroup"):
-    #         self.show_group(splitCommand[1])
-
-    #     if(splitCommand[0] == "exit"):
-    #         self.exit()
-
-        
-    #     self.other_command(splitCommand)
-        
-    #     self.input_command()
-        
-    # def print_result(self, status):
-    #     UserInterface1 = UserInterface()
-    #     UserInterface1.output(status)
-   
     def check_uniqueID(self, id):
         if id in self.contactDic.keys():
             return False
@@ -68,29 +30,6 @@ class Contactdon:
         return self.generate_id()
               
     def add(self, paramsDict):
-        # existF = False
-        # existL = False
-        # existE = False
-        # existP = False
-        # id=self.generate_id()
-        # for x in range(len(splitCommand)):
-        #     if(splitCommand[x] == "-f"):
-        #         fname = splitCommand[x + 1]
-        #         existF = True
-        #     if(splitCommand[x] == "-l"):
-        #         lname = splitCommand[x + 1]
-        #         existL = True
-        #     if(splitCommand[x] == "-e"):
-        #         emailaddress = splitCommand[x + 1]
-        #         existE=True
-        #     if(splitCommand[x] == "-p"):
-        #         phonenumber = splitCommand[x + 1]
-        #         existP=True
-        # if(self.check_exist_data(existF, existL, existE, existP)):
-        #     if(self.check_unique_fnamelname(fname, lname) and self.check_correctPhoneNum(phonenumber) and self.check_correctEmail(emailaddress) ):
-        #         self.add_contact(fname, lname, emailaddress, phonenumber,id)
-        #         return True
-        #     return False
         id=self.generate_id()
         if(len(paramsDict.keys()) == 4):
             if(self.check_unique_fnamelname(paramsDict["first name"], paramsDict["last name"]) and self.check_correctPhoneNum(paramsDict["phone number"]) and self.check_correctEmail(paramsDict["email address"]) ):
@@ -138,44 +77,44 @@ class Contactdon:
             return True
         return False
            
-    def update(self, splitCommand):
-        check = self.check_update(splitCommand)
+    def update(self, paramsDict):
+        check = self.check_update(paramsDict)
         if(check == False):
             return False
         else:
-            self.update_data(splitCommand)
+            self.update_data(paramsDict)
             return True
 
-    def check_update(self, splitCommand):
+    def check_update(self, paramsDict):
         check = True
-        if(not (splitCommand[1] in self.contactDic.keys())):
+        if(not (paramsDict["id"] in self.contactDic.keys())):
             check = False
-        for i in range(len(splitCommand)):
-            if(splitCommand[i] == "-f"):
-                if(self.check_unique_fname(splitCommand[1], splitCommand[i+1]) == False):
+        for key in paramsDict.keys():
+            if(key == "first name"):
+                if(self.check_unique_fname(paramsDict["id"], paramsDict["first name"]) == False):
                     check = False
-            if(splitCommand[i] == "-l"):
-                if(self.check_unique_lname(splitCommand[1], splitCommand[i+1]) == False):
+            if(key == "last name"):
+                if(self.check_unique_lname(paramsDict["id"], paramsDict["last name"]) == False):
                     check = False
-            if(splitCommand[i] == "-e"):
-                if(self.check_unique_emailaddress(splitCommand[i+1])==False or self.check_correctEmail(splitCommand[i+1]) == False):
+            if(key == "email address"):
+                if(self.check_unique_emailaddress(paramsDict["email address"]) == False or self.check_correctEmail(paramsDict["email address"]) == False):
                     check = False
-            if(splitCommand[i] == "-p"):
-                if(self.check_unique_phonenum(splitCommand[i+1]) == False or self.check_correctPhoneNum(splitCommand[i+1]) == False):
+            if(key == "phone number"):
+                if(self.check_unique_phonenum(paramsDict["phone number"]) == False or self.check_correctPhoneNum(paramsDict["phone number"]) == False):
                     check = False
         return check
 
-    def update_data(self, splitCommand):
-         for x in range(len(splitCommand)):
-                if(splitCommand[x] == "-f"):
-                    self.contactDic[splitCommand[1]]._fName = splitCommand[x+1]
-                if(splitCommand[x] == "-l"):
-                    self.contactDic[splitCommand[1]]._lName = splitCommand[x+1]
-                if(splitCommand[x] == "-e"):
-                    self.contactDic[splitCommand[1]]._emailAddress = splitCommand[x+1]
-                if(splitCommand[x] == "-p"):
-                    self.contactDic[splitCommand[1]]._phoneNumber = splitCommand[x+1]
-                
+    def update_data(self, paramsDict):
+        for key in paramsDict.keys():
+            if(key == "first name"):
+                self.contactDic[paramsDict["id"]]._fName = paramsDict["first name"]
+            if(key == "last name"):
+                self.contactDic[paramsDict["id"]]._lName = paramsDict["last name"]
+            if(key == "email address"):
+                self.contactDic[paramsDict["id"]]._emailAddress = paramsDict["email address"]
+            if(key == "phone number"):
+                self.contactDic[paramsDict["id"]]._phoneNumber = paramsDict["phone number"]
+
     def check_unique_fname(self, id, fname):
         for contact in self.contactDic:
             if(fname == self.contactDic[contact]._fName and self.contactDic[id]._lName == self.contactDic[contact]._lName):

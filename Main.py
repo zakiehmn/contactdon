@@ -7,7 +7,7 @@ class main:
     # contactdon.input_command()
 
     userInterface = UserInterface(contactdon)
-    userInterface.get_input()
+    userInterface.run()
     # if __name__ == "__main__":
     #     main()
 
