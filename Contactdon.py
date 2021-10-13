@@ -1,4 +1,5 @@
 from Contact import Contact
+from Group import Group 
 import string
 import random
 import json
@@ -14,7 +15,6 @@ class Contactdon:
     def add_contact(self, fName, lName, emailAddress, phoneNumber, id):
         newContact = Contact(fName, lName, emailAddress, phoneNumber, id)
         self.contactDic[id] = newContact
-        # print(self.contactDic[id])
         return True
         
     def check_uniqueID(self, id):
@@ -22,6 +22,7 @@ class Contactdon:
             return False
         return True
 
+    # move to utils
     def generate_id(self):
         letters = string.digits
         id=''.join(random.choice(letters) for i in range(5))
@@ -32,8 +33,10 @@ class Contactdon:
     def add(self, paramsDict):
         id=self.generate_id()
         if(len(paramsDict.keys()) == 4):
-            if(self.check_unique_fnamelname(paramsDict["first name"], paramsDict["last name"]) and self.check_correctPhoneNum(paramsDict["phone number"]) and self.check_correctEmail(paramsDict["email address"]) ):
-                self.add_contact(paramsDict["first name"], paramsDict["last name"], paramsDict["email address"], paramsDict["phone number"], id)
+            if(self.check_unique_fnamelname(paramsDict["first_name"], paramsDict["last_name"]) and 
+               self.check_correctPhoneNum(paramsDict["phone_number"]) and self.check_correctEmail(paramsDict["email_address"]) ):
+                self.add_contact(paramsDict["first_name"], paramsDict["last_name"],
+                paramsDict["email_address"], paramsDict["phone_number"], id)
                 return True
         return False
 
@@ -66,7 +69,15 @@ class Contactdon:
 
     def search(self, word):
         for contact in self.contactDic:
-            if(self.contactDic[contact]._fName.startswith(word) or self.contactDic[contact]._lName.startswith(word) or self.contactDic[contact]._emailAddress.startswith(word) or self.contactDic[contact]._phoneNumber.startswith(word) or self.contactDic[contact]._fName.endswith(word) or self.contactDic[contact]._lName.endswith(word) or self.contactDic[contact]._emailAddress.endswith(word) or self.contactDic[contact]._phoneNumber.endswith(word)):
+            if(self.contactDic[contact]._fName.startswith(word) 
+               or self.contactDic[contact]._lName.startswith(word)
+               or self.contactDic[contact]._emailAddress.startswith(word) 
+               or self.contactDic[contact]._phoneNumber.startswith(word)
+               or self.contactDic[contact]._fName.endswith(word) 
+               or self.contactDic[contact]._lName.endswith(word) 
+               or self.contactDic[contact]._emailAddress.endswith(word) 
+               or self.contactDic[contact]._phoneNumber.endswith(word)):
+            #    move to interface
                 print(self.contactDic[contact])
         
         self.search_group(word)
@@ -78,42 +89,42 @@ class Contactdon:
         return False
            
     def update(self, paramsDict):
-        check = self.check_update(paramsDict)
+        check = self.check_update_params(paramsDict)
         if(check == False):
             return False
         else:
-            self.update_data(paramsDict)
+            self.update_contact(paramsDict)
             return True
-
-    def check_update(self, paramsDict):
+# check update params
+    def check_update_params(self, paramsDict):
         check = True
         if(not (paramsDict["id"] in self.contactDic.keys())):
             check = False
         for key in paramsDict.keys():
-            if(key == "first name"):
-                if(self.check_unique_fname(paramsDict["id"], paramsDict["first name"]) == False):
+            if(key == "first_name"):
+                if(self.check_unique_fname(paramsDict["id"], paramsDict["first_name"]) == False):
                     check = False
-            if(key == "last name"):
-                if(self.check_unique_lname(paramsDict["id"], paramsDict["last name"]) == False):
+            if(key == "last_name"):
+                if(self.check_unique_lname(paramsDict["id"], paramsDict["last_name"]) == False):
                     check = False
-            if(key == "email address"):
-                if(self.check_unique_emailaddress(paramsDict["email address"]) == False or self.check_correctEmail(paramsDict["email address"]) == False):
+            if(key == "email_address"):
+                if(self.check_unique_emailaddress(paramsDict["email_address"]) == False or self.check_correctEmail(paramsDict["email_address"]) == False):
                     check = False
-            if(key == "phone number"):
-                if(self.check_unique_phonenum(paramsDict["phone number"]) == False or self.check_correctPhoneNum(paramsDict["phone number"]) == False):
+            if(key == "phone_number"):
+                if(self.check_unique_phonenum(paramsDict["phone_number"]) == False or self.check_correctPhoneNum(paramsDict["phone_number"]) == False):
                     check = False
         return check
 
-    def update_data(self, paramsDict):
+    def update_contact(self, paramsDict):
         for key in paramsDict.keys():
-            if(key == "first name"):
-                self.contactDic[paramsDict["id"]]._fName = paramsDict["first name"]
-            if(key == "last name"):
-                self.contactDic[paramsDict["id"]]._lName = paramsDict["last name"]
-            if(key == "email address"):
-                self.contactDic[paramsDict["id"]]._emailAddress = paramsDict["email address"]
-            if(key == "phone number"):
-                self.contactDic[paramsDict["id"]]._phoneNumber = paramsDict["phone number"]
+            if(key == "first_name"):
+                self.contactDic[paramsDict["id"]]._fName = paramsDict["first_name"]
+            if(key == "last_name"):
+                self.contactDic[paramsDict["id"]]._lName = paramsDict["last_name"]
+            if(key == "email_address"):
+                self.contactDic[paramsDict["id"]]._emailAddress = paramsDict["email_address"]
+            if(key == "phone_number"):
+                self.contactDic[paramsDict["id"]]._phoneNumber = paramsDict["phone_number"]
 
     def check_unique_fname(self, id, fname):
         for contact in self.contactDic:
@@ -140,70 +151,56 @@ class Contactdon:
         return True
       
     def other_command(self,splitCommand):
-        if(splitCommand[0] != "add" and splitCommand[0] != "exit" and splitCommand[0] != "search" and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print" and splitCommand[0] != "addgroup" and splitCommand[0] != "showgroup"):
-            print("command failed")
-
+        if(splitCommand[0] != "add" and splitCommand[0] != "exit" and splitCommand[0] != "search" 
+            and splitCommand[0] != "update" and splitCommand[0] != "delete" and splitCommand[0] != "print" 
+            and splitCommand[0] != "addgroup" and splitCommand[0] != "showgroup"):
+            return False
+        return True
+# move to userinterface
     def exit(self):
         self.write_json(self.fileName)
         quit()
 
-    def add_group(self, splitCommand):
-        groupContacts = []
-        for x in range(len(splitCommand)):
-            if(splitCommand[x] == "-n"):
-                group_name = splitCommand[x+1]
-            if(splitCommand[x] == "-c"):
-                IDs = splitCommand[x+1]
-
-        split_IDs = self.separate_IDs(IDs)
-       
-        if(len(split_IDs) != 0):
-            self.add_ID_group(group_name, split_IDs)
+    def add_group(self, paramsDict):
+        id = self.generate_id()
+        group = Group(paramsDict["group_name"], paramsDict["group_id"])
+        group.add_contact_group(paramsDict["contact_ids_list"], self.contactDic)
+        if(len(paramsDict["contact_ids_list"]) != 0):
+            self.groups.append(paramsDict)
             return True
-        else:
-            return False
+        return False
+   
+    def show_group(self, id):
+        for paramsDict in self.groups:
+            if(paramsDict.get("group_id") == id):
+                print("group name:" + paramsDict.get("group_name"))
+                self.print_group_contact(paramsDict.get("contact_ids_list"))
 
-            
-    def separate_IDs(self, IDs):
-        split_IDs = IDs.split(",")
-        return split_IDs
-
-    def add_ID_group(self, name, groupIDs):
-        groupDict = {}
-        groupDict[name] = groupIDs
-        self.groups.append(groupDict)
-
-    def show_group(self, name):
-        for d in self.groups:
-            if name in d.keys():
-                for l in d.values():
-                    for id in l:
-                        print(self.contactDic[id])
-                                
-    def group_member(self, name):
-        for d in self.groups:
-            for group in d.keys():
-                if(name == group):
-                    idslist = d[group]
-        
-        return len(idslist)
-
+    def print_group_contact(self, contactids):
+        for id in contactids:
+            print(self.contactDic[id])
+# query
     def search_group(self, word):
-        for d in self.groups:
-            for group in d.keys():
-                if(group.startswith(word) or group.endswith(word)):
-                    member = self.group_member(group)
-                    print(group +"  " +  "members :"+ " " + str(member) )
-                    
+        for paramsDict in self.groups:
+                if(paramsDict.get("group_name").startswith(word) or paramsDict.get("group_name").endswith(word)):
+                    member = self.count_group_members(paramsDict.get("group_id"))
+                    print(paramsDict.get("group_id") + " " +  paramsDict.get("group_name") + " " + str(member) + "members")
+    
+    def count_group_members(self, id):
+        for paramsdict in self.groups:
+            if(paramsdict.get("group_id") == id):
+                number = len(paramsdict.get("contact_ids_list"))
+                return number
 
     def write_json(self, fileName):
-        listDict = []
+        listContactDict = []
         for contact in self.contactDic.values():
-            listDict.append(contact.__dict__)
+            listContactDict.append(contact.__dict__)
 
         with open(fileName,'w') as fp:
-            json.dump(listDict, fp)    
-       
+            json.dump(listContactDict, fp)    
+
+
         with open("groupsList.json",'w') as g:
             json.dump(self.groups, g)
         
@@ -215,11 +212,7 @@ class Contactdon:
             self.add_contact(listdict[i].get("_fName"), listdict[i].get("_lName"), listdict[i].get("_emailAddress"), listdict[i].get("_phoneNumber"), listdict[i].get("_ID"))
 
         with open("groupsList.json") as g:
-            groupsDict = json.load(g)
-
-        for dicti in groupsDict:
-            self.groups.append(dicti)
-        
+            self.groups = json.load(g)
 
 
         

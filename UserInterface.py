@@ -39,7 +39,8 @@ class UserInterface:
             self.output(statusUpd)
 
         if(splitCommand[0] == "addgroup"):
-            statusGroup = self.contactdon.add_group(splitCommand)
+            paramsGroup = self.params_group_dict(splitCommand)
+            statusGroup = self.contactdon.add_group(paramsGroup)
             self.output(statusGroup)
 
         if(splitCommand[0] == "showgroup"):
@@ -48,7 +49,7 @@ class UserInterface:
         if(splitCommand[0] == "exit"):
             self.contactdon.exit()
 
-        # self.other_command(splitCommand)
+        self.other_command(splitCommand)
         
 
     def params_contact_dict(self, splitCommand):
@@ -64,19 +65,40 @@ class UserInterface:
             if(splitCommand[index] == "-p"):
                 phoneNumber = splitCommand[index+1]
         if(fName != ""):
-            paramsDict["first name"] = fName
+            paramsDict["first_name"] = fName
         if(lName != ""):
-            paramsDict.update({"last name" : lName})
+            paramsDict.update({"last_name" : lName})
         if(emailAddress != ""):
-            paramsDict.update({"email address" : emailAddress})
+            paramsDict.update({"email_address" : emailAddress})
         if(phoneNumber != ""):
-            paramsDict.update({"phone number" : phoneNumber})  
+            paramsDict.update({"phone_number" : phoneNumber})  
         return paramsDict
 
     def add_id_params(self, splitCommand):
         paramsDict = self.params_contact_dict(splitCommand)
         paramsDict.update({"id" : splitCommand[1]})
         return paramsDict
+
+    def params_group_dict(self, splitCommand):
+        paramsDict = {}
+        for index in range(len(splitCommand)):
+            if(splitCommand[index] == "-n"):
+                groupName = splitCommand[index+1]
+            if(splitCommand[index] == "-c"):
+                idsStr = splitCommand[index+1]
+                splitIds = self.separate_ids(idsStr)
+        id = self.contactdon.generate_id()
+
+        paramsDict = {
+            "group_name" : groupName ,
+            "contact_ids_list" : splitIds ,
+            "group_id" : id
+        }
+        return paramsDict
+                
+    def separate_ids(self, idsStr):
+        splitIds = idsStr.split(",")
+        return splitIds
 
     def output(self, status):
         if(status):
