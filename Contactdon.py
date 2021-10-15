@@ -135,7 +135,6 @@ class Contactdon:
     def exit(self):
         self.write_json(self.contactFile,self.groupFile)
         
-
     def add_group(self, paramsDict):
         group = Group(paramsDict["group_name"], int(paramsDict["group_id"]))
         group.add_contact_group(paramsDict["contact_ids_list"], self.contactDic)
@@ -160,7 +159,6 @@ class Contactdon:
         for contact in members:
             idsList.append(contact._ID)
         return idsList
-
 
     def return_group(self, id):
         for group in self.groups:
@@ -197,8 +195,7 @@ class Contactdon:
             self.add_contact(listdict[i].get("_fName"), listdict[i].get("_lName"),
                              listdict[i].get("_emailAddress"), listdict[i].get("_phoneNumber"),
                              listdict[i].get("_ID"))
-
-        
+       
         with open(groupFile) as g:
             groupDictList = json.load(g)
             for Dict in groupDictList:

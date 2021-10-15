@@ -58,8 +58,6 @@ class UserInterface:
             self.contactdon.exit()
             quit()
 
-        # self.other_command(splitCommand)
-        
     def params_contact_dict(self, splitCommand):
         paramsDict = {}
         fName, lName, emailAddress, phoneNumber = "", "", "", ""
