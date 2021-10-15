@@ -1,12 +1,13 @@
 from Contactdon import Contactdon
 from Group import Group
-from Utils import Utils
+from Utils import generate_id
+from Utils import check_correctPhoneNum
+from Utils import check_correctEmail
 
 class UserInterface:
 
-    def __init__(self, contactdon, utils = Utils()):
+    def __init__(self, contactdon):
         self.contactdon = contactdon
-        self.utils = utils
 
     def run (self):
         inputCommand = input()
@@ -34,14 +35,12 @@ class UserInterface:
             resultGroup = self.contactdon.search_group(splitCommand[1])
             self.print_search(resultGroup)
             
-
         if(splitCommand[0] == "delete"):
             statusDel = self.contactdon.delete(splitCommand[1])
             self.output(statusDel)
 
         if(splitCommand[0] == "update"):
             paramsUpdate = self.add_id_params(splitCommand)
-            print(paramsUpdate)
             statusUpd = self.contactdon.update(paramsUpdate)
             self.output(statusUpd)
 
@@ -96,7 +95,7 @@ class UserInterface:
             if(splitCommand[index] == "-c"):
                 idsStr = splitCommand[index+1]
                 splitIds = self.separate_ids(idsStr)
-        id = self.utils.generate_id()
+        id = generate_id()
         id = self.contactdon.check_uniqueID(id)
 
         paramsDict = {
