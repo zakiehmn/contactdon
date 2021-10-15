@@ -5,5 +5,10 @@ class Group :
         self._id = id
     
     def add_contact_group(self, idslist, contactDic):
+        contactsList = []
         for id in idslist:
-            self._membersList.append(contactDic[id])
+            contactsList.append(contactDic[id])
+        self._membersList = contactsList
+
+    def __str__(self):
+        return '{} {} {} members'.format(self._id, self._name, str(len(self._membersList)))

@@ -1,9 +1,12 @@
 from Contactdon import Contactdon
+from Group import Group
+from Utils import Utils
 
 class UserInterface:
 
-    def __init__(self, contactdon):
+    def __init__(self, contactdon, utils = Utils()):
         self.contactdon = contactdon
+        self.utils = utils
 
     def run (self):
         inputCommand = input()
@@ -26,7 +29,11 @@ class UserInterface:
             self.output(statusAdd)
 
         if(splitCommand[0] == "search"):
-            self.contactdon.search(splitCommand[1])
+            resultContact = self.contactdon.search_contact(splitCommand[1])
+            self.print_search(resultContact)
+            resultGroup = self.contactdon.search_group(splitCommand[1])
+            self.print_search(resultGroup)
+            
 
         if(splitCommand[0] == "delete"):
             statusDel = self.contactdon.delete(splitCommand[1])
@@ -44,14 +51,16 @@ class UserInterface:
             self.output(statusGroup)
 
         if(splitCommand[0] == "showgroup"):
-            self.contactdon.show_group(splitCommand[1])
+            group = self.contactdon.return_group(splitCommand[1])
+            self.print_group(group)
+            
 
         if(splitCommand[0] == "exit"):
             self.contactdon.exit()
+            quit()
 
-        self.other_command(splitCommand)
+        # self.other_command(splitCommand)
         
-
     def params_contact_dict(self, splitCommand):
         paramsDict = {}
         fName, lName, emailAddress, phoneNumber = "", "", "", ""
@@ -87,7 +96,8 @@ class UserInterface:
             if(splitCommand[index] == "-c"):
                 idsStr = splitCommand[index+1]
                 splitIds = self.separate_ids(idsStr)
-        id = self.contactdon.generate_id()
+        id = self.utils.generate_id()
+        id = self.contactdon.check_uniqueID(id)
 
         paramsDict = {
             "group_name" : groupName ,
@@ -99,6 +109,15 @@ class UserInterface:
     def separate_ids(self, idsStr):
         splitIds = idsStr.split(",")
         return splitIds
+
+    def print_search(self, resultList):
+        for index in resultList:
+            print(index)
+
+    def print_group(self, group):
+            print("group name :" + group._name)
+            for contact in group._membersList:
+                print(contact)
 
     def output(self, status):
         if(status):
